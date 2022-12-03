@@ -1,0 +1,46 @@
+<body>
+    <a id="welcome"></a>
+    <form id="formElem">
+        <input type="text" name="login">
+        <input type="text" name="password">
+        <button type="submit">Login</button>
+    </form>
+    <a id="result"></a>
+    <script>
+        const db_url = 'http://192.168.0.35:4000';
+        const welcome_a = document.getElementById('welcome');
+        const result_a = document.getElementById('welcome');
+        fetch(db_url + '/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                query : "{me { login }}"
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            welcome_a.innerHTML = "Welcome " + data.data.me.login;
+        });
+        function handleSubmit(event) {
+            event.preventDefault();
+            const data = new FormData(event.target);
+            const login = data.get('login');
+            const password = data.get('password');
+            console.log({ login, password });
+            fetch(db_url + '/graphql', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    query : "{ login(login: \"" + login+ "\", password: \"" + password + "\")}"
+                })}).then(() => location.reload());
+            };
+        var form = document.getElementById('formElem');
+        form.addEventListener('submit', handleSubmit);
+    </script>
+</body>
