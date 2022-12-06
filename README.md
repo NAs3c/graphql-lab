@@ -12,6 +12,6 @@ Replace your IP in www/index.html
 
 ## launch
 ```bash
-node server.js
+node server.js &
 cd www && python3 -m http.server 8000
 ```
